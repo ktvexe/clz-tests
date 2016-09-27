@@ -28,15 +28,12 @@ static double diff_in_second(struct timespec t1, struct timespec t2)
 int main(int argc,char *argv[]){
 	FILE *output;
 	struct timespec start,end;
-	double time1;
-	clock_gettime(CLOCK_REALTIME,&start);
-	for(uint32_t i=0;i<UINT_MAX;i++){
-//	for(uint32_t i=0;i<=10000;i++){
-		clz(i);
+	double time1,time_all=0;
+	if(argc>1){
+		printf("%d \n",atoi(argv[1]));
+		printf("%d \n",clz((unsigned)atoi(argv[1])));
 	}
-	clock_gettime(CLOCK_REALTIME,&end);
-	time1 = diff_in_second(start,end);
-
+	else{
 #if defined(recursive)
 	output =fopen("recursive.txt","a");
 #elif defined(iteration)
@@ -45,13 +42,30 @@ int main(int argc,char *argv[]){
 	output =fopen("byte.txt","a");
 #elif defined(binary)
 	output =fopen("binary.txt","a");
+#elif defined(harley)
+	output =fopen("harley.txt","a");
 #endif	
 
-	fprintf(output,"time %lf sec\n",time1);
+	
+	clock_gettime(CLOCK_REALTIME,&start);
+	for(uint32_t i=0;i<UINT_MAX;i++){
+//	for(uint32_t i=0;i<=10000;i++){
+	//	clock_gettime(CLOCK_REALTIME,&start);
+		clz(i);
+//		clock_gettime(CLOCK_REALTIME,&end);
+	//	time1 = diff_in_second(start,end);
+//		printf("time: %lf\n",time1);
+		time_all+=time1;
+//		fprintf(output,"time: %lf sec\n",time1);
+	}
+
+	clock_gettime(CLOCK_REALTIME,&end);
+	time1 = diff_in_second(start,end);
+
 	fclose(output);
 
 	printf("executiom time : %lf sec\n",time1);
 	
-	
+	}	
 	return 0;
 }
