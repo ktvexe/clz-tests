@@ -59,13 +59,17 @@ int main(int argc,char *argv[]){
 //	clock_gettime(CLOCK_REALTIME,&start);
 	for(uint32_t i=min;i<max;i++){
 //	for(uint32_t i=0;i<=10000;i++){
-		clock_gettime(CLOCK_REALTIME,&start);
-		clz(i);
-		clock_gettime(CLOCK_REALTIME,&end);
-		time1 = diff_in_second(start,end);
+		time1 =0;
+		for(int j=0;j<100;j++){
+			clock_gettime(CLOCK_REALTIME,&start);
+			clz(i);
+			clock_gettime(CLOCK_REALTIME,&end);
+			time1 += diff_in_second(start,end);
 //		printf("time: %.10lf\n",time1);
-		time_all+=time1;
-		fprintf(output,"time: %.10lf sec\n",time1);
+			
+		}
+		time_all+=time1/100;
+		fprintf(output,"time: %.10lf sec\n",time1/100);
 	}
 
 //	clock_gettime(CLOCK_REALTIME,&end);
