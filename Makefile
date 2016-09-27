@@ -3,8 +3,11 @@ CFLAGS_common ?= -Wall -std=gnu99 -g -DDEBUG
 CFLAGS_iteration = -O0
 CFLAGS_binary  = -O0
 CFLAGS_byte  = -O0
-CFLAGS_recursive  = -Wall -std=gnu99 -g -DDEBUG -O0
-
+CFLAGS_harlay  = -O0
+CFLAGS_recursive  = -O0
+ifeq ($(strip $(PROFILE)),1)
+CFLAGS_common += -Dcorrect
+endif
 EXEC = iteration binary byte recursive harley
 all: $(EXEC)
 
@@ -23,11 +26,11 @@ byte: $(SRCS_common) byte.c clz.h
 		-o $@ -Dbyte $(SRCS_common) $@.c
 
 harley: $(SRCS_common) harley.c clz.h
-	$(CC) $(CFLAGS_common) $(CFLAGS_byte) \
+	$(CC) $(CFLAGS_common) $(CFLAGS_harley) \
 		-o $@ -Dharley $(SRCS_common) $@.c
 
 recursive: $(SRCS_common) recursive.c clz.hpp
-	gcc  $(CFLAGS_recursive) \
+	gcc  $(CFLAGS_common) $(CFLAGS_recursive) \
 		-o $@ -Drecursive $(SRCS_common) $@.c
 
 run:$(EXEC)
@@ -38,4 +41,4 @@ run:$(EXEC)
 
 .PHONY: clean
 clean:
-	$(RM) $(EXEC) *.o
+	$(RM) $(EXEC) *.o *.txt

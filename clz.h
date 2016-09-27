@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+#if defined(recursive) 
+unsigned clz2(uint32_t x,int c);
+#else 
 unsigned clz(uint32_t x);
+#endif
 
 #endif

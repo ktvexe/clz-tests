@@ -1,6 +1,0 @@
-time 0.000001 sec
-time 0.000001 sec
-time 0.000001 sec
-time 0.000000 sec
-time 0.000175 sec
-time 26.263889 sec
