@@ -55,13 +55,13 @@ static double diff_in_second(struct timespec t1, struct timespec t2)
 int main(int argc,char *argv[]){
 	FILE *output;
 	//struct timespec start,end;
-	double time1;
-	uint64_t time_all=0;
+	uint64_t timec,time_all=0;
+	unsigned timec_high1,timec_low1,timec_high2,timec_low2;
 	//int time_all=0;
 #if defined(correct)
 	for(int try=0;try<20;try++){
-		time1=0;
-		clock_gettime(CLOCK_REALTIME,&start);
+		timec=0;
+		get_cycles(&timec_high1,&timec_low1);
 		for(uint32_t i=0;i<32;i++){
 			const int num =clz(1<<i);
 			printf("%ud:%d \n",1<<i,num);
@@ -69,9 +69,9 @@ int main(int argc,char *argv[]){
 				assert( num == clz(j));
 			}
 		}	
-		clock_gettime(CLOCK_REALTIME,&end);
-		time1 += diff_in_second(start,end);
-		printf("executiom time : %.10lf sec\n",time1);
+		get_cycles_end(&timec_high2,&timec_low2);
+		timec=diff_in_cycles(timec_high1,timec_low1,timec_high2,timec_low2);	
+		printf("executiom time : %lu cycles\n",timec);
 	}
 #else
 	assert(argv[1]&&argv[2]&&"insert argument");
@@ -88,14 +88,13 @@ int main(int argc,char *argv[]){
 #elif defined(harley)
 	output =fopen("harley.txt","a");
 #endif	
-	uint64_t timec,timecall;
-	unsigned timec_high1,timec_low1,timec_high2,timec_low2;
+	uint64_t timecall;
 //	fprintf(output,"min:%d \n",min);
 //	fprintf(output,"max:%d \n",max);
 //	clock_gettime(CLOCK_REALTIME,&start);
 	for(uint32_t i=min;i<max;i++){
 //	for(uint32_t i=0;i<=10000;i++){
-		time1 =0;
+		//time1 =0;
 		timecall=0;
 		for(int j=0;j<100;j++){
 //			clock_gettime(CLOCK_REALTIME,&start);
@@ -112,7 +111,7 @@ int main(int argc,char *argv[]){
 		time_all+=(timecall/100);
 		//time_all+=(time1/100);
 		fprintf(output,"%d %lu cycles\n",i,timecall/100);
-		//fprintf(output,"%d %.10lf sec\n",i,time1/100);
+		printf("%d %lu cycles\n",i,timecall/100);
 	}
 
 //	clock_gettime(CLOCK_REALTIME,&end);

@@ -1,9 +1,10 @@
 #include "clz.hpp"
 
+static const int mask[]={0,8,12,14};
+static const int magic[]={2,1,0,0};
+
 unsigned clz2(uint32_t x,int c)
 {
-	const int mask[]={0,8,12,14};
-	const int magic[]={2,1,0,0};
 	
 	if(!x && !c)	return 32;
 
