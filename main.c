@@ -31,10 +31,10 @@ int main(int argc,char *argv[]){
 	FILE *output;
 	struct timespec start,end;
 	double time1,time_all=0;
-	assert(argv[1]&&argv[2]&&"insert argument");
-	unsigned int min=atoi(argv[1]);
-	unsigned int max=atoi(argv[2]);
 #if defined(correct)
+	for(int try=0;try<20;try++){
+		time1=0;
+		clock_gettime(CLOCK_REALTIME,&start);
 		for(uint32_t i=0;i<32;i++){
 			const int num =clz(1<<i);
 			printf("%ud:%d \n",1<<i,num);
@@ -42,7 +42,14 @@ int main(int argc,char *argv[]){
 				assert( num == clz(j));
 			}
 		}	
+		clock_gettime(CLOCK_REALTIME,&end);
+		time1 += diff_in_second(start,end);
+		printf("executiom time : %.10lf sec\n",time1);
+	}
 #else
+	assert(argv[1]&&argv[2]&&"insert argument");
+	unsigned int min=atoi(argv[1]);
+	unsigned int max=atoi(argv[2]);
 #if defined(recursive)
 	output =fopen("recursive.txt","a");
 #elif defined(iteration)
@@ -56,6 +63,8 @@ int main(int argc,char *argv[]){
 #endif	
 
 	
+//	fprintf(output,"min:%d \n",min);
+//	fprintf(output,"max:%d \n",max);
 //	clock_gettime(CLOCK_REALTIME,&start);
 	for(uint32_t i=min;i<max;i++){
 //	for(uint32_t i=0;i<=10000;i++){
@@ -68,8 +77,8 @@ int main(int argc,char *argv[]){
 //		printf("time: %.10lf\n",time1);
 			
 		}
-		time_all+=time1/100;
-		fprintf(output,"time: %.10lf sec\n",time1/100);
+		time_all+=(time1/100);
+		fprintf(output,"%d %.10lf sec\n",i,time1/100);
 	}
 
 //	clock_gettime(CLOCK_REALTIME,&end);

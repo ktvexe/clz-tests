@@ -26,5 +26,5 @@ unsigned clz(uint32_t x)
     x = (x << 8) - x;   /* Again. */
     x = (x << 8) - x;   /* Again. */
 
-    return Table[x >> 26];
+    return Table[(x >> 26)];
 }

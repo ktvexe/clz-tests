@@ -34,13 +34,13 @@ recursive: $(SRCS_common) recursive.c clz.hpp
 		-o $@ -Drecursive $(SRCS_common) $@.c
 
 run:$(EXEC)
-	./iteration 0 100
-	./binary 0 100000
-	./byte 0 100000
-	./recursive 0 100000
-	./harley 0 100000
+	./iteration 100000000 100016384
+	./binary 100000000 100016384
+	./byte 100000000 100016384
+	./recursive 100000000 100016384
+	./harley 100000000 100016384
 
-plot:iteration.txt
+plot:iteration.txt iteration.txt binary.txt byte.txt harley.txt
 	gnuplot scripts/runtime.gp
 
 
