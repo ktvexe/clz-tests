@@ -29,9 +29,9 @@ harley: $(SRCS_common) harley.c clz.h
 	$(CC) $(CFLAGS_common) $(CFLAGS_harley) \
 		-o $@ -Dharley $(SRCS_common) $@.c
 
-recursive: $(SRCS_common) recursive.c clz.hpp
+recursive: $(SRCS_common) recursive2.c clz.hpp
 	gcc  $(CFLAGS_common) $(CFLAGS_recursive) \
-		-o $@ -Drecursive $(SRCS_common) $@.c
+		-o $@ -Drecursive $(SRCS_common) $@2.c
 
 run:$(EXEC)
 	./iteration 100000000 100016384
