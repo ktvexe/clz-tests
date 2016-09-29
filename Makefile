@@ -34,11 +34,11 @@ recursive: $(SRCS_common) recursive2.c clz.hpp
 		-o $@ -Drecursive $(SRCS_common) $@2.c
 
 run:$(EXEC)
-	./iteration 100000000 100016384
-	./binary 100000000 100016384
-	./byte 100000000 100016384
-	./recursive 100000000 100016384
-	./harley 100000000 100016384
+	taskset -c 1 ./iteration 100000000 100016384
+	taskset -c 1 ./binary 100000000 100016384
+	taskset -c 1 ./byte 100000000 100016384
+	taskset -c 1 ./recursive 100000000 100016384
+	taskset -c 1 ./harley 100000000 100016384
 
 plot:iteration.txt iteration.txt binary.txt byte.txt harley.txt
 	gnuplot scripts/runtime.gp
