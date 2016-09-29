@@ -1,6 +1,7 @@
 #include "clz.h"
 
 
+static inline __attribute((always_inline))
 unsigned clz(uint32_t x) {
     if (x == 0) return 32;
     int n = 0;

@@ -1,5 +1,6 @@
 #include "clz.h"
 
+static inline __attribute((always_inline))
 unsigned clz(uint32_t x) {
     int n = 32, c = 16;
     do {

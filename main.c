@@ -4,6 +4,7 @@
 #include <limits.h>
 #include <time.h>
 #include <assert.h>
+#include <omp.h>
 #include "clz.h"
 
 #if defined(recursive)
@@ -12,7 +13,8 @@
 //#else
 //#include "clz.h"
 #endif
-static inline void get_cycles(unsigned *high,unsigned *low)
+static inline __attribute__((always_inline)) 
+void get_cycles(unsigned *high,unsigned *low)
 {
 		asm volatile ("CPUID\n\t" 
 					"RDTSC\n\t"
@@ -21,7 +23,8 @@ static inline void get_cycles(unsigned *high,unsigned *low)
 		);	
 }
 
-static inline void get_cycles_end(unsigned *high,unsigned *low){
+static inline __attribute__((always_inline)) 
+void get_cycles_end(unsigned *high,unsigned *low){
 
 		asm volatile("RDTSCP\n\t"
 					 "mov %%edx, %0\n\t"
@@ -30,7 +33,8 @@ static inline void get_cycles_end(unsigned *high,unsigned *low){
 		);
 }
 
-static inline uint64_t diff_in_cycles(unsigned high1,unsigned low1,unsigned high2,unsigned low2){
+static inline __attribute__((always_inline)) 
+uint64_t diff_in_cycles(unsigned high1,unsigned low1,unsigned high2,unsigned low2){
 		uint64_t start,end;
 		start = ( ((uint64_t)high1 << 32) | low1 );
 		end = ( ((uint64_t)high2 << 32) | low2 );
@@ -38,7 +42,8 @@ static inline uint64_t diff_in_cycles(unsigned high1,unsigned low1,unsigned high
 }
 
 
-static double diff_in_second(struct timespec t1, struct timespec t2)
+static inline __attribute__((unused))
+double diff_in_second(struct timespec t1, struct timespec t2)
 {
     struct timespec diff;
     if (t2.tv_nsec-t1.tv_nsec < 0) {
@@ -63,10 +68,10 @@ int main(int argc,char *argv[]){
 		timec=0;
 		get_cycles(&timec_high1,&timec_low1);
 		for(uint32_t i=0;i<32;i++){
-			const int num =clz(1<<i);
-			printf("%ud:%d \n",1<<i,num);
+//			const int num =clz(1<<i);
+			printf("%u:%d \n",1<<i,clz(1<<i));
 			for(uint32_t j=(1<<i);j<(1<<(i+1));j++){
-				assert( num == clz(j));
+				assert( __builtin_clz (j) == clz(j));
 			}
 		}	
 		get_cycles_end(&timec_high2,&timec_low2);
@@ -96,6 +101,9 @@ int main(int argc,char *argv[]){
 //	for(uint32_t i=0;i<=10000;i++){
 		//time1 =0;
 		timecall=0;
+#ifdef MP
+#pragma omp parallel for
+#endif
 		for(int j=0;j<100;j++){
 //			clock_gettime(CLOCK_REALTIME,&start);
 			get_cycles(&timec_high1,&timec_low1);

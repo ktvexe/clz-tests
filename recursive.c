@@ -1,5 +1,6 @@
 #include "clz.hpp"
 
+static inline __attribute((always_inline))
 unsigned clz2(uint32_t x,int c)
 {
 	const int magic[]={0,8,12,14,15};
