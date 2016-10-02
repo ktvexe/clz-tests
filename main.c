@@ -5,13 +5,16 @@
 #include <time.h>
 #include <assert.h>
 #include <omp.h>
-#include "clz.h"
+//#include "clz.h"
 
 #if defined(recursive)
 #define clz(x) clz2(x,0)
-//#include "clz.hpp"
-//#else
-//#include "clz.h"
+#endif
+
+#if defined(overload)
+#include "clz.hpp"
+#else
+#include "clz.h"
 #endif
 static inline __attribute__((always_inline)) 
 void get_cycles(unsigned *high,unsigned *low)
@@ -68,7 +71,6 @@ int main(int argc,char *argv[]){
 		timec=0;
 		get_cycles(&timec_high1,&timec_low1);
 		for(uint32_t i=0;i<32;i++){
-//			const int num =clz(1<<i);
 			printf("%u:%d \n",1<<i,clz(1<<i));
 			for(uint32_t j=(1<<i);j<(1<<(i+1));j++){
 				assert( __builtin_clz (j) == clz(j));
@@ -92,19 +94,20 @@ int main(int argc,char *argv[]){
 	output =fopen("binary.txt","a");
 #elif defined(harley)
 	output =fopen("harley.txt","a");
+#elif defined(overload)
+	output =fopen("overload.txt","a");
 #endif	
 	uint64_t timecall;
-//	fprintf(output,"min:%d \n",min);
-//	fprintf(output,"max:%d \n",max);
 //	clock_gettime(CLOCK_REALTIME,&start);
 	for(uint32_t i=min;i<max;i++){
+	//for(uint32_t i=1;i<4294967295;i>>1){
 //	for(uint32_t i=0;i<=10000;i++){
 		//time1 =0;
 		timecall=0;
 #ifdef MP
 #pragma omp parallel for
 #endif
-		for(int j=0;j<100;j++){
+		for(uint32_t j=0;j<100;j++){
 //			clock_gettime(CLOCK_REALTIME,&start);
 			get_cycles(&timec_high1,&timec_low1);
 			clz(i);

@@ -1,9 +1,9 @@
-#ifndef CLZ_H
-#define	CLZ_H
-#define clz(x) clz2(x,0)
-#include <stdint.h>
+#ifndef CLZ_HPP
+#define	CLZ_HPP
+#include <cstdint>
 
-static inline __attribute((always_inline))
-unsigned clz2(uint32_t x,int c);
+unsigned clz(uint32_t x);
+unsigned clz(uint16_t x);
+unsigned clz(uint8_t x);
 
 #endif
